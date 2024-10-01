@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct PokedexApp: App {
     @StateObject private var splashCoordinator = SplashCoordinator()
-    
+
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $splashCoordinator.navigationPath) {

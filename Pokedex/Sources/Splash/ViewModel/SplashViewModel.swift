@@ -8,6 +8,9 @@
 import SwiftUI
 
 class SplashViewModel: SplashViewModelProtocol {
+    @Published var ballOffset: CGSize = CGSize(width: -300, height: 0)
+    @Published var textOpacity: Double = 0.0
+
     let coordinator: SplashCoordinator
 
     init(coordinator: SplashCoordinator) {
@@ -15,6 +18,23 @@ class SplashViewModel: SplashViewModelProtocol {
     }
 
     func onAppear() {
-      
+        DispatchQueue.main.async { [weak self] in
+            self?.animateBallEntry()
+            self?.animateTextAppearance()
+        }
+    }
+
+    private func animateBallEntry() {
+        withAnimation(.interpolatingSpring(stiffness: 100, damping: 10)) {
+            ballOffset = .zero
+        }
+    }
+
+    private func animateTextAppearance() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            withAnimation(.easeIn(duration: 1.0)) {
+                self?.textOpacity = 1.0
+            }
+        }
     }
 }

@@ -5,6 +5,9 @@
 //  Created by Savyo Brenner on 01/10/24.
 //
 
-protocol SplashViewModelProtocol: ViewModelProtocol {
+import Foundation
 
+protocol SplashViewModelProtocol: ViewModelProtocol {
+    var ballOffset: CGSize { get set }
+    var textOpacity: Double { get set }
 }
