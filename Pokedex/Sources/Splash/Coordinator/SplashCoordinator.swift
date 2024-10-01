@@ -10,4 +10,16 @@ class SplashCoordinator: BaseCoordinator<SplashView<SplashViewModel>> {
         let viewModel = SplashViewModel(coordinator: self)
         return SplashView(viewModel: viewModel)
     }
+
+    enum Navigation {
+        case home
+    }
+
+    func navigate(to navigation: Navigation) {
+        switch navigation {
+        case .home:
+            let homeCoordinator = HomeCoordinator()
+            present(homeCoordinator.start())
+        }
+    }
 }

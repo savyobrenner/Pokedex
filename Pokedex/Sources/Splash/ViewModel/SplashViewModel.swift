@@ -35,6 +35,15 @@ class SplashViewModel: SplashViewModelProtocol {
             withAnimation(.easeIn(duration: 1.0)) {
                 self?.textOpacity = 1.0
             }
+
+            // Navigate to home after animation
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                self?.navigateToHome()
+            }
         }
+    }
+
+    private func navigateToHome() {
+        coordinator.navigate(to: .home)
     }
 }
