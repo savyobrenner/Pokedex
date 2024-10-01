@@ -11,7 +11,10 @@ struct SplashView<ViewModel: SplashViewModelProtocol>: View {
     @ObservedObject var viewModel: ViewModel
     
     var body: some View {
-        EmptyView()
+        ZStack {
+            Color.red
+                .ignoresSafeArea()
+        }
     }
 }
 
