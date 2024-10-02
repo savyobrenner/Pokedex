@@ -1,5 +1,5 @@
 //
-//  PokemonRow.swift
+//  PokemonCardView.swift
 //  Pokedex
 //
 //  Created by Savyo Brenner on 02/10/24.
@@ -7,22 +7,18 @@
 
 import SwiftUI
 
-struct PokemonRow: View {
-    let pokemonData: PokemonListResponse.PokemonData
-    let pokemonDetails: Pokemon?
+struct PokemonCardView<ViewModel: PokemonCardViewModelProtocol>: View {
+    @ObservedObject var viewModel: ViewModel
 
     var body: some View {
         HStack {
-            if let details = pokemonDetails {
+            if let details = viewModel.pokemonDetails {
                 VStack(alignment: .leading) {
                     Text("#\(details.id) \(details.name.capitalized)")
                         .font(.headline)
-//                    Text("Type: \(details.types.map { $0.type.name }.joined(separator: ", "))")
+//                    Text("Type: \(details.images.frontalURL.absoluteString ?? "")")
 //                        .font(.subheadline)
                 }
-            } else {
-                Text(pokemonData.name.capitalized)
-                    .font(.headline)
             }
             Spacer()
         }
@@ -30,5 +26,10 @@ struct PokemonRow: View {
         .background(Color.white.opacity(0.2))
         .cornerRadius(10)
         .padding(.horizontal)
+        .onAppear {
+            Task {
+                await viewModel.loadPokemonDetails()
+            }
+        }
     }
 }

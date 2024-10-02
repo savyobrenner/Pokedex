@@ -14,7 +14,7 @@ struct PokemonListResponse: Codable {
 }
 
 extension PokemonListResponse {
-    struct PokemonData: Codable {
+    struct PokemonData: Codable, Equatable {
         let name: String
         let url: URL
     }

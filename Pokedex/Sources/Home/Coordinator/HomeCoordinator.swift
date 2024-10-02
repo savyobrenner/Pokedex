@@ -7,7 +7,8 @@
 
 class HomeCoordinator: BaseCoordinator<HomeView<HomeViewModel>> {
     override func start() -> HomeView<HomeViewModel> {
-        let viewModel = HomeViewModel(coordinator: self)
+        let services = HomeServices()
+        let viewModel = HomeViewModel(coordinator: self, services: services)
         return HomeView(viewModel: viewModel)
     }
 }

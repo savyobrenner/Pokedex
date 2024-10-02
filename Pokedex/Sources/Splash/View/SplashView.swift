@@ -28,7 +28,7 @@ struct SplashView<ViewModel: SplashViewModelProtocol>: View {
             }
         }
         .onAppear {
-            viewModel.onAppear()
+            viewModel.onLoad()
         }
     }
 }

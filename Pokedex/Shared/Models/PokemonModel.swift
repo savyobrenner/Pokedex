@@ -14,7 +14,7 @@ struct Pokemon: Codable, Identifiable, Equatable {
     
     let id: Int
     let name: String
-    let images: [Image]
+    let images: Image
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -25,7 +25,7 @@ struct Pokemon: Codable, Identifiable, Equatable {
 
 extension Pokemon {
     struct Image: Codable {
-        let frontalURL: URL
+        let frontalURL: URL?
 
         enum CodingKeys: String, CodingKey {
             case frontalURL = "front_default"

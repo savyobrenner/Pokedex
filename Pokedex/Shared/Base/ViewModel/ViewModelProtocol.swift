@@ -10,5 +10,4 @@ import SwiftUI
 protocol ViewModelProtocol: ObservableObject {
     associatedtype CoordinatorType: CoordinatorProtocol
     var coordinator: CoordinatorType { get }
-    func onAppear()
 }

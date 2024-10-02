@@ -8,20 +8,21 @@
 import SwiftUI
 
 class HomeViewModel: HomeViewModelProtocol {
-    @Published var pokemons: [Pokemon] = []
+    @Published var pokemons: [PokemonListResponse.PokemonData] = [] // Armazena dados básicos de Pokémon
+    @Published var pokemonDetails: [String: Pokemon] = [:] // Armazena os detalhes dos Pokémon por nome/URL
     @Published var searchText: String = "" {
         didSet {
             handleSearchTextChange()
         }
     }
 
-    private let coordinator: HomeCoordinator
+    let coordinator: HomeCoordinator
     private let services: HomeServicesProtocol
     private var nextURL: URL? = nil
     private var isLoading = false
     private var loadedURLs: Set<URL> = []
 
-    init(coordinator: HomeCoordinator, services: HomeServicesProtocol = HomeServices()) {
+    init(coordinator: HomeCoordinator, services: HomeServicesProtocol) {
         self.coordinator = coordinator
         self.services = services
     }
@@ -36,17 +37,14 @@ class HomeViewModel: HomeViewModelProtocol {
         guard !isLoading else { return }
 
         isLoading = true
-
         defer { isLoading = false }
 
         do {
             let response = try await services.loadPokemons(limit: 20, offset: 0)
-
             DispatchQueue.main.async {
                 self.nextURL = response.next
-                self.loadPokemonDetails(for: response.results)
+                self.pokemons.append(contentsOf: response.results)
             }
-
         } catch {
             print("Error loading initial pokemons: \(error)")
         }
@@ -61,40 +59,37 @@ class HomeViewModel: HomeViewModelProtocol {
             let response = try await services.loadPokemons(from: url)
             DispatchQueue.main.async {
                 self.nextURL = response.next
-                self.loadPokemonDetails(for: response.results)
+                self.pokemons.append(contentsOf: response.results)
             }
         } catch {
             print("Error loading more pokemons: \(error)")
         }
     }
 
-    private func loadPokemonDetails(for pokemonDataList: [PokemonListResponse.PokemonData]) {
-        for pokemonData in pokemonDataList {
-            guard !loadedURLs.contains(pokemonData.url) else { continue }
-            loadedURLs.insert(pokemonData.url)
+    func loadPokemonDetails(for url: URL) async {
+        guard !loadedURLs.contains(url) else { return }
+        loadedURLs.insert(url)
 
-            Task {
-                do {
-                    let pokemon = try await services.loadPokemonDetails(from: pokemonData.url)
-                    DispatchQueue.main.async {
-                        self.pokemons.append(pokemon)
-                    }
-                } catch {
-                    print("Error loading pokemon details: \(error)")
-                }
+        do {
+            let pokemon = try await services.loadPokemonDetails(from: url)
+            DispatchQueue.main.async {
+                self.pokemonDetails[pokemon.name] = pokemon
             }
+        } catch {
+            print("Error loading pokemon details: \(error)")
         }
     }
 
     func searchPokemon(by nameOrId: String) async {
-        do {
-            let pokemon = try await services.searchPokemon(nameOrId: nameOrId)
-            DispatchQueue.main.async {
-                self.pokemons = [pokemon]
-            }
-        } catch {
-            print("Error searching pokemon: \(error)")
-        }
+//        do {
+//            let pokemon = try await services.searchPokemon(nameOrId: nameOrId)
+//            DispatchQueue.main.async {
+//                self.pokemons = [PokemonListResponse.PokemonData(name: pokemon.name, url: pokemon.url)]
+//                self.pokemonDetails[pokemon.name] = pokemon
+//            }
+//        } catch {
+//            print("Error searching pokemon: \(error)")
+//        }
     }
 
     private func handleSearchTextChange() {
@@ -113,6 +108,7 @@ class HomeViewModel: HomeViewModelProtocol {
         nextURL = nil
         pokemons.removeAll()
         loadedURLs.removeAll()
+        pokemonDetails.removeAll()
         Task {
             await loadInitialPokemons()
         }

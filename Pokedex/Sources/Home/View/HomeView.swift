@@ -32,11 +32,10 @@ struct HomeView<ViewModel: HomeViewModelProtocol>: View {
                 // Pokémon List
                 ScrollView {
                     LazyVStack {
-                        ForEach(viewModel.pokemons) { pokemon in
-                            PokemonRow(pokemon: pokemon)
+                        ForEach(viewModel.pokemons, id: \.url) { pokemonData in
+                            PokemonCardCoordinator(pokemonData: pokemonData).start()
                                 .onAppear {
-                                    // Carrega mais Pokémon se estiver próximo do final da lista
-                                    if pokemon == viewModel.pokemons.last {
+                                    if pokemonData == viewModel.pokemons.last {
                                         Task {
                                             await viewModel.loadMorePokemons()
                                         }
@@ -58,5 +57,5 @@ struct HomeView<ViewModel: HomeViewModelProtocol>: View {
 }
 
 #Preview {
-    HomeView(viewModel: HomeViewModel(coordinator: .init()))
+    HomeView(viewModel: HomeViewModel(coordinator: .init(), services: HomeServices()))
 }

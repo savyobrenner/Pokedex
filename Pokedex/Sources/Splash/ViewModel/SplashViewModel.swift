@@ -17,7 +17,7 @@ class SplashViewModel: SplashViewModelProtocol {
         self.coordinator = coordinator
     }
 
-    func onAppear() {
+    func onLoad() {
         DispatchQueue.main.async { [weak self] in
             self?.animateBallEntry()
             self?.animateTextAppearance()
