@@ -29,24 +29,26 @@ struct PokemonCardView<ViewModel: PokemonCardViewModelProtocol>: View {
                     .frame(width: 80, height: 80)
                     .padding()
 
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("#\(details.id) \(details.name.capitalized)")
+                    Text("#\(details.id) \(details.name.capitalized)")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                } else {
+                    HStack {
+                        Image(.pokedexImagePlaceholder)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .cornerRadius(20)
+                            .opacity(0.4)
+                            .clipped()
+
+                        Text("Loading...")
                             .font(.title3)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
-
-                        // Adicionando um exemplo de tipo do Pokémon com chips futuristas
-//                        HStack {
-//                            ForEach(details.types, id: \.type.name) { type in
-//                                Text(type.type.name.capitalized)
-//                                    .font(.caption)
-//                                    .padding(8)
-//                                    .background(Color.white.opacity(0.2))
-//                                    .clipShape(Capsule())
-//                                    .foregroundColor(.white)
-//                            }
-//                        }
+                            .padding()
                     }
+                    
                     Spacer()
                 }
             }
@@ -60,4 +62,14 @@ struct PokemonCardView<ViewModel: PokemonCardViewModelProtocol>: View {
             }
         }
     }
+}
+
+#Preview {
+    // MARK: - The force unwrap is only "acceptable" here because it's for preview purposes and does not interfere with the running app
+    let pokemonData = PokemonListResponse.PokemonData(
+        name: "nScren",
+        url: .init(string: "https://pokeapi.co/api/v2/ability/65/")!
+    )
+
+    return PokemonCardCoordinator(pokemonData: pokemonData).start()
 }

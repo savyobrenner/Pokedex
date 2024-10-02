@@ -9,14 +9,13 @@ import Foundation
 
 class PokemonCardCoordinator: BaseCoordinator<PokemonCardView<PokemonCardViewModel>> {
     private let pokemonData: PokemonListResponse.PokemonData
-    private let services: HomeServicesProtocol
 
-    init(pokemonData: PokemonListResponse.PokemonData, services: HomeServicesProtocol = HomeServices()) {
+    init(pokemonData: PokemonListResponse.PokemonData) {
         self.pokemonData = pokemonData
-        self.services = services
     }
 
     override func start() -> PokemonCardView<PokemonCardViewModel> {
+        let services = HomeServices()
         let viewModel = PokemonCardViewModel(coordinator: self, pokemonData: pokemonData, services: services)
         return PokemonCardView(viewModel: viewModel)
     }

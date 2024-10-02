@@ -5,7 +5,7 @@
 //  Created by Savyo Brenner on 02/10/24.
 //
 
-import SwiftUI
+import Foundation
 
 protocol HomeViewModelProtocol: ViewModelProtocol {
     var pokemons: [PokemonListResponse.PokemonData] { get }
