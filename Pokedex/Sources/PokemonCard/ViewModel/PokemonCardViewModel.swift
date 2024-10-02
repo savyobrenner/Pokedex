@@ -20,14 +20,16 @@ class PokemonCardViewModel: PokemonCardViewModelProtocol {
         self.services = services
     }
 
-    func loadPokemonDetails() async {
-        do {
-            let details = try await services.loadPokemonDetails(from: pokemonData.url)
-            DispatchQueue.main.async {
-                self.pokemonDetails = details
+    func loadPokemonDetails() {
+        Task {
+            do {
+                let details = try await services.loadPokemonDetails(from: pokemonData.url)
+                DispatchQueue.main.async {
+                    self.pokemonDetails = details
+                }
+            } catch {
+                print("Error loading pokemon details (Pokemon Card): \(error)")
             }
-        } catch {
-            print("Error loading pokemon details (Pokemon Card): \(error)")
         }
     }
 }

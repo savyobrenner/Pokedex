@@ -7,5 +7,5 @@
 
 protocol PokemonCardViewModelProtocol: ViewModelProtocol {
     var pokemonDetails: Pokemon? { get }
-    func loadPokemonDetails() async
+    func loadPokemonDetails()
 }

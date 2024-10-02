@@ -14,11 +14,11 @@ struct PokemonCardView<ViewModel: PokemonCardViewModelProtocol>: View {
         ZStack {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(LinearGradient(
-                    gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.purple.opacity(0.6)]),
+                    gradient: Gradient(colors: [Color.Brand.blue, Color.Brand.navyBlue]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 ))
-                .shadow(color: Color.purple.opacity(0.4), radius: 10, x: 0, y: 10)
+                .shadow(color: Color.Brand.black.opacity(0.3), radius: 10, x: 0, y: 5)
 
             HStack {
                 if let details = viewModel.pokemonDetails {
@@ -28,38 +28,44 @@ struct PokemonCardView<ViewModel: PokemonCardViewModelProtocol>: View {
                     )
                     .frame(width: 80, height: 80)
                     .padding()
+                    .background {
+                        Circle()
+                            .foregroundStyle(Color.Brand.white.opacity(0.3))
+                    }
 
-                    Text("#\(details.id) \(details.name.capitalized)")
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("#\(details.id) \(details.name.capitalized)")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                    }
+                    .padding(.leading)
+
+                    Spacer()
                 } else {
                     HStack {
                         Image(.pokedexImagePlaceholder)
                             .resizable()
-                            .aspectRatio(contentMode: .fit)
+                            .scaledToFit()
                             .cornerRadius(20)
                             .opacity(0.4)
                             .clipped()
+                            .frame(width: 80, height: 80)
 
                         Text("Loading...")
                             .font(.title3)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
-                            .padding()
                     }
-                    
+
                     Spacer()
                 }
             }
             .padding()
         }
-        .frame(height: 150)
-        .padding(.horizontal)
+        .frame(height: 120)
         .onAppear {
-            Task {
-                await viewModel.loadPokemonDetails()
-            }
+            viewModel.loadPokemonDetails()
         }
     }
 }
