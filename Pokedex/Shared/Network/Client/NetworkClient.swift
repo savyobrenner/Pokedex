@@ -16,9 +16,18 @@ final class NetworkClient: NetworkProtocol {
 
     func sendRequest<Response: Decodable>(endpoint: Endpoint, responseModel: Response.Type) async throws -> Response {
         let request = try prepareRequest(for: endpoint)
+        return try await send(request: request, responseModel: responseModel)
+    }
 
+    func sendRequest<Response: Decodable>(url: URL, responseModel: Response.Type) async throws -> Response {
+        let request = URLRequest(url: url)
+        return try await send(request: request, responseModel: responseModel)
+    }
+
+    private func send<Response: Decodable>(request: URLRequest, responseModel: Response.Type) async throws -> Response {
         do {
             let (data, response) = try await urlSession.data(for: request)
+
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw AppError.invalidResponse
             }

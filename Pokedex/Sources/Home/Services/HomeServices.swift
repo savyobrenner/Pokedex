@@ -14,10 +14,25 @@ final class HomeServices: HomeServicesProtocol {
         self.network = network
     }
 
-    func loadHome() async throws -> String {
-        let response = try await network.sendRequest(endpoint: HomeEndpoint.loadHome, responseModel: String.self)
+    func loadPokemons(limit: Int, offset: Int) async throws -> PokemonListResponse {
+        let endpoint = HomeEndpoint.loadPokemons(limit: limit, offset: offset)
+        let response = try await network.sendRequest(endpoint: endpoint, responseModel: PokemonListResponse.self)
+        return response
+    }
 
+    func loadPokemons(from url: URL) async throws -> PokemonListResponse {
+        let response = try await network.sendRequest(url: url, responseModel: PokemonListResponse.self)
+        return response
+    }
+
+    func searchPokemon(nameOrId: String) async throws -> Pokemon {
+        let endpoint = HomeEndpoint.searchPokemon(nameOrId: nameOrId)
+        let response = try await network.sendRequest(endpoint: endpoint, responseModel: Pokemon.self)
+        return response
+    }
+
+    func loadPokemonDetails(from url: URL) async throws -> Pokemon {
+        let response = try await network.sendRequest(url: url, responseModel: Pokemon.self)
         return response
     }
 }
-

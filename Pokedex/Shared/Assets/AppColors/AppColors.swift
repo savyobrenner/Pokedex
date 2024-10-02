@@ -10,7 +10,8 @@ import SwiftUI
 extension Color {
     enum Brand {
         static let clear = Color.clear
-        static let white = Color.white
         static let black = Color.black
+        static let primary = Color.red
+        static let secondary = Color.white
     }
 }

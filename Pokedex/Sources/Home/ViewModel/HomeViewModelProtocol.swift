@@ -5,8 +5,12 @@
 //  Created by Savyo Brenner on 02/10/24.
 //
 
-import Foundation
+import SwiftUI
 
-protocol HomeViewModelProtocol: ViewModelProtocol {
-
+protocol HomeViewModelProtocol: ObservableObject {
+    var pokemons: [Pokemon] { get }
+    var searchText: String { get set }
+    func onLoad()
+    func loadMorePokemons() async
+    func searchPokemon(by nameOrId: String) async
 }
