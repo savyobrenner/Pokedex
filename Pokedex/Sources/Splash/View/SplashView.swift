@@ -23,7 +23,7 @@ struct SplashView<ViewModel: SplashViewModelProtocol>: View {
 
                 Text("Pokedex")
                     .font(.brand(.pokemonHollow, size: 50))
-                    .foregroundStyle(Color.Brand.secondary)
+                    .foregroundStyle(Color.Brand.white)
                     .opacity(viewModel.textOpacity)
             }
         }

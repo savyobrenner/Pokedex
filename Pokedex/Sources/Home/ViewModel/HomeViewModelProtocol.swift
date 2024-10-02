@@ -13,7 +13,7 @@ protocol HomeViewModelProtocol: ViewModelProtocol {
     var searchText: String { get set }
 
     func onLoad()
-    func loadMorePokemons() async
+    func loadMorePokemons()
     func searchPokemon(by nameOrId: String) async
     func loadPokemonDetails(for url: URL) async
 }

@@ -60,23 +60,26 @@ class HomeViewModel: HomeViewModelProtocol {
         }
     }
 
-    func loadMorePokemons() async {
+    func loadMorePokemons() {
         guard !isLoading, let url = nextURL else { return }
 
         isLoading = true
-        defer { isLoading = false }
+        
+        Task {
+            defer { isLoading = false }
 
-        do {
-            let response = try await services.loadPokemons(from: url)
+            do {
+                let response = try await services.loadPokemons(from: url)
 
-            DispatchQueue.main.async { [weak self] in
-                self?.nextURL = response.next
-                self?.pokemons.append(contentsOf: response.results)
-                self?.allPokemons.append(contentsOf: response.results)
+                DispatchQueue.main.async { [weak self] in
+                    self?.nextURL = response.next
+                    self?.pokemons.append(contentsOf: response.results)
+                    self?.allPokemons.append(contentsOf: response.results)
+                }
+            } catch {
+                // TODO: - Implement error handling
+                print("Error loading more pokemons: \(error)")
             }
-        } catch {
-            // TODO: - Implement error handling
-            print("Error loading more pokemons: \(error)")
         }
     }
 

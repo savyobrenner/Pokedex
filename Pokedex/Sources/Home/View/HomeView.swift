@@ -13,44 +13,48 @@ struct HomeView<ViewModel: HomeViewModelProtocol>: View {
     var body: some View {
         ZStack {
             LinearGradient(
-                gradient: Gradient(colors: [Color.red, Color.Brand.black]),
+                gradient: Gradient(colors: [Color.red, Color.Brand.darkBlue]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
             .edgesIgnoringSafeArea(.all)
 
-            VStack {
+            VStack(spacing: 20) {
                 Text("Pokedex")
-                    .font(.brand(.pokemonHollow, size: 50))
-                    .foregroundStyle(Color.Brand.secondary)
+                    .font(.brand(.pokemonHollow, size: 36))
+                    .foregroundStyle(Color.Brand.white)
+                    .padding(.top, 20)
 
-                // Search Bar
                 TextField("Search Pokémon by name or ID", text: $viewModel.searchText)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
+                    .background(Color.Brand.white.opacity(0.9))
+                    .cornerRadius(10)
+                    .padding(.horizontal)
 
-                // Pokémon List
                 ScrollView {
-                    LazyVStack {
+                    LazyVStack(spacing: 16) {
                         ForEach(viewModel.pokemons, id: \.url) { pokemonData in
-                            PokemonCardCoordinator(pokemonData: pokemonData).start()
-                                .onAppear {
-                                    if pokemonData == viewModel.pokemons.last {
-                                        Task {
-                                            await viewModel.loadMorePokemons()
-                                        }
-                                    }
+                            let coordinator = PokemonCardCoordinator(pokemonData: pokemonData)
+                            PokemonCardView(
+                                viewModel: PokemonCardViewModel(coordinator: coordinator, pokemonData: pokemonData)
+                            )
+                            .padding(.horizontal)
+                            .shadow(color: Color.Brand.black.opacity(0.2), radius: 10, x: 0, y: 5)
+                            .onAppear {
+                                if pokemonData == viewModel.pokemons.last {
+                                    viewModel.loadMorePokemons()
                                 }
+                            }
                         }
                     }
                 }
 
                 Spacer()
             }
-            .padding()
+            .padding(.bottom, 20)
         }
         .onAppear {
-            viewModel.onLoad() // Chama onLoad para carregar os Pokémon iniciais
+            viewModel.onLoad()
         }
         .navigationBarBackButtonHidden(true)
     }
