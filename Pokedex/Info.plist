@@ -6,6 +6,11 @@
 	<array>
 		<string>Pokemon Hollow.ttf</string>
 		<string>Pokemon Solid.ttf</string>
+		<string>Poppins-Black.ttf</string>
+		<string>Poppins-Bold.ttf</string>
+		<string>Poppins-Medium.ttf</string>
+		<string>Poppins-Regular.ttf</string>
+		<string>Poppins-Thin.ttf</string>
 	</array>
 </dict>
 </plist>

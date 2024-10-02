@@ -8,7 +8,8 @@
 enum BrandFontName: String {
     case pokemonHollow = "Pokemon Hollow"
     case pokemonSolid = "Pokemon Solid"
-    case bold = ""
-    case regular = " "
-    case semibold = "  "
+    case regular = "Poppins-Regular"
+    case medium = "Poppins-Medium"
+    case bold = "Poppins-Bold"
+    case black = "Poppins-Black"
 }

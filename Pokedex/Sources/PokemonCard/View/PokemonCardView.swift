@@ -38,6 +38,48 @@ struct PokemonCardView<ViewModel: PokemonCardViewModelProtocol>: View {
                             .font(.title2)
                             .fontWeight(.semibold)
                             .foregroundColor(.white)
+
+                        // Tipos do Pokémon
+                        if let types = details.types {
+                            HStack {
+                                ForEach(types, id: \.slot) { typeElement in
+                                    if let typeName = typeElement.type?.name {
+                                        Text(typeName.capitalized)
+                                            .font(.caption)
+                                            .padding(6)
+                                            .background(Color.white.opacity(0.2))
+                                            .clipShape(Capsule())
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                            }
+                        }
+
+                        // Altura e Peso do Pokémon
+                        if let height = details.height, let weight = details.weight {
+                            Text("Height: \(height) • Weight: \(weight)")
+                                .font(.footnote)
+                                .foregroundColor(.white.opacity(0.8))
+                        }
+
+                        // Habilidades do Pokémon
+                        if let abilities = details.abilities {
+                            Text("Abilities:")
+                                .font(.footnote)
+                                .foregroundColor(.white.opacity(0.8))
+                                .padding(.top, 2)
+
+                            ForEach(abilities, id: \.ability?.name) { abilityElement in
+                                if let abilityName = abilityElement.ability?.name {
+                                    Text(abilityName.capitalized)
+                                        .font(.caption2)
+                                        .padding(.horizontal, 6)
+                                        .background(Color.white.opacity(0.2))
+                                        .clipShape(Capsule())
+                                        .foregroundColor(.white)
+                                }
+                            }
+                        }
                     }
                     .padding(.leading)
 
@@ -46,7 +88,7 @@ struct PokemonCardView<ViewModel: PokemonCardViewModelProtocol>: View {
                     HStack {
                         Image(.pokedexImagePlaceholder)
                             .resizable()
-                            .scaledToFit()
+                            .aspectRatio(contentMode: .fill)
                             .cornerRadius(20)
                             .opacity(0.4)
                             .clipped()
@@ -56,6 +98,7 @@ struct PokemonCardView<ViewModel: PokemonCardViewModelProtocol>: View {
                             .font(.title3)
                             .fontWeight(.bold)
                             .foregroundColor(.white)
+                            .padding(.leading)
                     }
 
                     Spacer()
@@ -63,7 +106,7 @@ struct PokemonCardView<ViewModel: PokemonCardViewModelProtocol>: View {
             }
             .padding()
         }
-        .frame(height: 120)
+        .frame(height: 150)
         .onAppear {
             viewModel.loadPokemonDetails()
         }
