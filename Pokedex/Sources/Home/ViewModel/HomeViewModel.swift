@@ -9,53 +9,64 @@ import SwiftUI
 
 class HomeViewModel: HomeViewModelProtocol {
     @Published
+    var isLoading = false
+    
+    @Published
+    var isSearching = false
+    
+    @Published
     var pokemons: [PokemonListResponse.PokemonData] = []
-
+    
     @Published
     var pokemonDetails: [String: Pokemon] = [:]
-
+    
     @Published
-    var searchText: String = "" {
+    var searchText = "" {
         didSet {
             handleSearchTextChange()
         }
     }
-
+    
     @Published
-    var isLoading = false
-
+    var selectedType = "" {
+        didSet {
+            handleTypeSelectionChange()
+        }
+    }
+    
     @Published
-    var isSearching = false
-
+    var availableTypes: [String] = []
+    
     private var nextURL: URL?
     private var loadedURLs: Set<URL> = []
     private var allPokemons: [PokemonListResponse.PokemonData] = []
-
+    
     private var searchTask: Task<Void, Never>?
-
+    
     let coordinator: HomeCoordinator
     private let services: HomeServicesProtocol
-
+    
     init(coordinator: HomeCoordinator, services: HomeServicesProtocol) {
         self.coordinator = coordinator
         self.services = services
     }
-
+    
     func onLoad() {
         Task {
+            await loadPokemonTypes()
             await loadInitialPokemons()
         }
     }
-
+    
     private func loadInitialPokemons() async {
         guard !isLoading else { return }
         Task { @MainActor in
             isLoading = true
             defer { isLoading = false }
-
+            
             do {
                 let response = try await services.loadPokemons(limit: 20, offset: 0)
-
+                
                 DispatchQueue.main.async { [weak self] in
                     self?.nextURL = response.next
                     self?.pokemons.append(contentsOf: response.results)
@@ -67,18 +78,18 @@ class HomeViewModel: HomeViewModelProtocol {
             }
         }
     }
-
+    
     func loadMorePokemons() {
         guard !isLoading, let url = nextURL else { return }
-
+        
         isLoading = true
-
+        
         Task { @MainActor in
             defer { isLoading = false }
-
+            
             do {
                 let response = try await services.loadPokemons(from: url)
-
+                
                 DispatchQueue.main.async { [weak self] in
                     self?.nextURL = response.next
                     self?.pokemons.append(contentsOf: response.results)
@@ -90,14 +101,14 @@ class HomeViewModel: HomeViewModelProtocol {
             }
         }
     }
-
+    
     func searchPokemon(by nameOrId: String) async {
         let lowercasedQuery = nameOrId.lowercased()
-
+        
         Task { @MainActor in
-
+            
             searchTask?.cancel()
-
+            
             guard let searchURL = URL(
                 string: AppConstants.searchByNameOrIdURL.replacingOccurrences(of: "%@", with: lowercasedQuery)
             ) else {
@@ -106,12 +117,13 @@ class HomeViewModel: HomeViewModelProtocol {
             
             isLoading = true
             isSearching = true
-            self.pokemons = []
+            pokemons = []
+            selectedType = ""
 
             defer {
                 isLoading = false
             }
-
+            
             // If it's an ID we make the request directly
             if let pokemonId = Int(lowercasedQuery) {
                 do {
@@ -125,7 +137,7 @@ class HomeViewModel: HomeViewModelProtocol {
                 let filteredPokemons = allPokemons.filter { pokemon in
                     pokemon.name == lowercasedQuery
                 }
-
+                
                 if filteredPokemons.isEmpty {
                     do {
                         let pokemon = try await services.searchPokemon(nameOrId: lowercasedQuery)
@@ -140,23 +152,64 @@ class HomeViewModel: HomeViewModelProtocol {
             }
         }
     }
+    
+    func loadPokemonTypes() async {
+        Task { @MainActor in
+            do {
+                let response = try await services.loadTypes()
+                availableTypes = response.results.map { $0.name }
+            } catch {
+                print("Error loading Pokémon types: \(error)")
+            }
+        }
+    }
+    
+    private func handleTypeSelectionChange() {
+        guard selectedType != "" else {
+            resetFilter()
+            return
+        }
+        
+        Task { @MainActor in
+            await searchPokemonByType(selectedType)
+        }
+    }
+    
+    func searchPokemonByType(_ type: String) async {
+        Task { @MainActor in
+            isLoading = true
+            isSearching = true
+            self.pokemons = []
+            
+            defer {
+                isLoading = false
+            }
+
+            do {
+                let pokemonsOfType = try await services.loadPokemonsByType(type)
+                self.pokemons = pokemonsOfType
+            } catch {
+                print("Error loading pokemons by type: \(error)")
+            }
+        }
+    }
 
     private func handleSearchTextChange() {
         searchTask?.cancel()
-
+        
         guard !searchText.isEmpty else {
             resetFilter()
             return
         }
-
+        
         searchTask = Task { [weak self] in
             try? await Task.sleep(nanoseconds: 100_000_000)
-
+            
             guard let self, !Task.isCancelled else { return }
             await self.searchPokemon(by: self.searchText)
         }
     }
-
+    
     private func resetFilter() {
         DispatchQueue.main.async {
             self.pokemons = self.allPokemons

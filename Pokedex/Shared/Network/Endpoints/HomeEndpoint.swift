@@ -10,20 +10,28 @@ import Foundation
 enum HomeEndpoint: Endpoint {
     case loadPokemons(limit: Int, offset: Int)
     case searchPokemon(nameOrId: String)
+    case loadTypes
+    case loadPokemonsByType(String)
 
     var path: String {
         switch self {
-        case .loadPokemons(let limit, let offset):
+        case let .loadPokemons(limit, offset):
             return "pokemon?limit=\(limit)&offset=\(offset)"
-        case .searchPokemon(let nameOrId):
+        case let .searchPokemon(nameOrId):
             return "pokemon/\(nameOrId)"
+        case .loadTypes:
+            return "type"
+        case let .loadPokemonsByType(type):
+            return "type/\(type)"
         }
     }
-
+    
     var request: HttpMethods {
         switch self {
         case .loadPokemons,
-             .searchPokemon:
+                .searchPokemon,
+                .loadTypes,
+                .loadPokemonsByType:
             return .get
         }
     }

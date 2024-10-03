@@ -13,6 +13,8 @@ protocol HomeViewModelProtocol: ViewModelProtocol {
     var searchText: String { get set }
     var isLoading: Bool { get set }
     var isSearching: Bool { get set }
+    var selectedType: String { get set }
+    var availableTypes: [String] { get set }
 
     func onLoad()
     func loadMorePokemons()

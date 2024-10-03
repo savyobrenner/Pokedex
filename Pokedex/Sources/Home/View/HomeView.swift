@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView<ViewModel: HomeViewModelProtocol>: View {
     @ObservedObject var viewModel: ViewModel
-    
+
     var body: some View {
         ZStack {
             LinearGradient(
@@ -18,19 +18,52 @@ struct HomeView<ViewModel: HomeViewModelProtocol>: View {
                 endPoint: .bottomTrailing
             )
             .edgesIgnoringSafeArea(.all)
-            
+
             VStack(spacing: 20) {
                 Text("Pokedex")
                     .font(.brand(.pokemonHollow, size: 36))
                     .foregroundStyle(Color.Brand.white)
                     .padding(.top, 20)
-                
+
                 PDTextField(text: $viewModel.searchText, placeholder: "Search Pokémon by name or ID")
                     .padding()
                     .background(Color.Brand.white.opacity(0.9))
                     .frame(height: 50)
                     .cornerRadius(10)
                     .padding(.horizontal)
+
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        Button {
+                            viewModel.selectedType = ""
+                        } label: {
+                            Text("All Types")
+                                .font(.brand(.bold, size: 16))
+                                .padding()
+                                .background(viewModel.selectedType.isEmpty ? Color.Brand.blue : Color.Brand.white)
+                                .foregroundColor(viewModel.selectedType.isEmpty ? Color.Brand.white : Color.Brand.black)
+                                .cornerRadius(10)
+                        }
+
+                        ForEach(viewModel.availableTypes, id: \.self) { type in
+                            Button(action: {
+                                viewModel.selectedType = type
+                            }) {
+                                Text(type.capitalized)
+                                    .font(.brand(.bold, size: 16))
+                                    .padding()
+                                    .background(viewModel.selectedType == type ? Color.Brand.blue : Color.Brand.white)
+                                    .foregroundColor(
+                                        viewModel.selectedType == type
+                                        ? Color.Brand.white
+                                        : Color.Brand.black
+                                    )
+                                    .cornerRadius(10)
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
 
                 if viewModel.isLoading {
                     ProgressView()

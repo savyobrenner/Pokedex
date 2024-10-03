@@ -12,4 +12,6 @@ protocol HomeServicesProtocol {
     func loadPokemons(from url: URL) async throws -> PokemonListResponse
     func searchPokemon(nameOrId: String) async throws -> Pokemon
     func loadPokemonDetails(from url: URL) async throws -> Pokemon
+    func loadTypes() async throws -> TypeListResponse
+    func loadPokemonsByType(_ type: String) async throws -> [PokemonListResponse.PokemonData]
 }

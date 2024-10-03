@@ -35,4 +35,16 @@ final class HomeServices: HomeServicesProtocol {
         let response = try await network.sendRequest(url: url, responseModel: Pokemon.self)
         return response
     }
+
+    func loadTypes() async throws -> TypeListResponse {
+        let endpoint = HomeEndpoint.loadTypes
+        let response = try await network.sendRequest(endpoint: endpoint, responseModel: TypeListResponse.self)
+        return response
+    }
+
+    func loadPokemonsByType(_ type: String) async throws -> [PokemonListResponse.PokemonData] {
+        let endpoint = HomeEndpoint.loadPokemonsByType(type)
+        let response = try await network.sendRequest(endpoint: endpoint, responseModel: PokemonByTypeResponse.self)
+        return response.pokemons
+    }
 }
