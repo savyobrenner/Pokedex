@@ -8,77 +8,99 @@
 import SwiftUI
 
 struct PokemonDetailView<ViewModel: PokemonDetailViewModelProtocol>: View {
-    @ObservedObject var viewModel: ViewModel
-
+    @ObservedObject
+    var viewModel: ViewModel
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text(viewModel.pokemon.name.capitalized)
-                .font(.largeTitle)
-                .fontWeight(.bold)
-
-            Text("#\(viewModel.pokemon.id)")
-                .font(.title3)
-                .foregroundColor(.gray)
-
-            HStack(spacing: 20) {
-                if let frontDefaultURL = viewModel.pokemon.images?.frontDefault {
-                    PDImageView(url: frontDefaultURL, placeholderImage: .init(.pokedexImagePlaceholder))
-                        .frame(width: 100, height: 100)
-                }
-
-                if let frontShinyURL = viewModel.pokemon.images?.frontShiny {
-                    PDImageView(url: frontShinyURL, placeholderImage: .init(.pokedexImagePlaceholder))
-                        .frame(width: 100, height: 100)
-                }
-            }
-
-            VStack(alignment: .leading) {
-                Text("Types")
-                    .font(.headline)
-
-                HStack {
-                    ForEach(viewModel.types, id: \.self) { type in
-                        Button(action: {
-                            viewModel.onTypeSelected(type)
-                        }) {
-                            Text(type.capitalized)
-                                .padding(10)
-                                .background(typeColor(type))
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
+        ZStack {
+            LinearGradient(
+                gradient: Gradient(colors: [Color.red, Color.Brand.darkBlue]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .edgesIgnoringSafeArea(.all)
+            
+            ScrollView {
+                VStack(spacing: 20) {
+                    VStack(spacing: 10) {
+                        Text(viewModel.pokemon.name.capitalized)
+                            .font(.brand(.bold, size: 22))
+                            .foregroundStyle(Color.Brand.white)
+                            .shadow(radius: 3)
+                        
+                        Text("#\(viewModel.pokemon.id)")
+                            .font(.brand(.bold, size: 20))
+                            .foregroundStyle(Color.Brand.white)
+                    }
+                    
+                    if let images = viewModel.pokemon.images {
+                        PDImageCarouselView(
+                            images: [images.frontDefault, images.frontShiny, images.backDefault, images.backShiny]
+                                .compactMap { $0 }
+                        )
+                        .frame(height: 100)
+                        .padding(.vertical)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .shadow(radius: 10)
+                        .padding(.horizontal)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Types")
+                            .font(.brand(.black, size: 22))
+                            .foregroundStyle(Color.Brand.white)
+                        
+                        HStack {
+                            ForEach(viewModel.types, id: \.self) { type in
+                                Button {
+                                    viewModel.onTypeSelected(type)
+                                } label: {
+                                    Text(type.capitalized)
+                                        .font(.brand(.medium, size: 14))
+                                        .padding(10)
+                                        .background(randomTypeColor())
+                                        .foregroundStyle(Color.Brand.white)
+                                        .cornerRadius(8)
+                                        .shadow(radius: 3)
+                                }
+                            }
                         }
                     }
+                    
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Stats")
+                            .font(.brand(.black, size: 22))
+                            .foregroundStyle(Color.Brand.white)
+                            .padding(.bottom, 5)
+                        
+                        VStack(spacing: 10) {
+                            ForEach(viewModel.formattedStats, id: \.self) { stat in
+                                HStack {
+                                    Text(stat)
+                                        .font(.brand(.regular, size: 14))
+                                        .foregroundStyle(Color.Brand.white)
+                                        .padding(10)
+                                    Spacer()
+                                }
+                                .background(Color.Brand.white.opacity(0.1))
+                                .cornerRadius(12)
+                                .shadow(radius: 3)
+                            }
+                        }
+                    }
+                    
+                    Spacer()
                 }
+                .padding()
             }
-
-            VStack(alignment: .leading) {
-                Text("Stats")
-                    .font(.headline)
-
-                ForEach(viewModel.formattedStats, id: \.self) { stat in
-                    Text(stat)
-                        .font(.body)
-                }
-            }
-
-            Spacer()
         }
-        .padding()
-        .navigationTitle("Pokemon Details")
     }
-
-    private func typeColor(_ type: String) -> Color {
-        // Retorna uma cor com base no tipo de Pokémon
-        switch type.lowercased() {
-        case "fire": return .red
-        case "water": return .blue
-        case "grass": return .green
-        case "electric": return .yellow
-        case "psychic": return .purple
-        case "rock": return .brown
-        case "ground": return .orange
-        // Adicione outras cores para tipos diferentes aqui
-        default: return .gray
-        }
+    
+    private func randomTypeColor() -> Color {
+        Color(
+            red: Double.random(in: 0.5...1),
+            green: Double.random(in: 0.5...1),
+            blue: Double.random(in: 0.5...1)
+        )
     }
 }
