@@ -32,37 +32,52 @@ struct HomeView<ViewModel: HomeViewModelProtocol>: View {
                     .cornerRadius(10)
                     .padding(.horizontal)
 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 10) {
-                        Button {
-                            viewModel.selectedType = ""
-                        } label: {
-                            Text("All Types")
-                                .font(.brand(.bold, size: 16))
-                                .padding()
-                                .background(viewModel.selectedType.isEmpty ? Color.Brand.blue : Color.Brand.white)
-                                .foregroundColor(viewModel.selectedType.isEmpty ? Color.Brand.white : Color.Brand.black)
-                                .cornerRadius(10)
-                        }
-
-                        ForEach(viewModel.availableTypes, id: \.self) { type in
-                            Button(action: {
-                                viewModel.selectedType = type
-                            }) {
-                                Text(type.capitalized)
+                ScrollViewReader { scrollProxy in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 10) {
+                            Button {
+                                viewModel.selectedType = ""
+                            } label: {
+                                Text("All Types")
                                     .font(.brand(.bold, size: 16))
                                     .padding()
-                                    .background(viewModel.selectedType == type ? Color.Brand.blue : Color.Brand.white)
-                                    .foregroundColor(
-                                        viewModel.selectedType == type
-                                        ? Color.Brand.white
-                                        : Color.Brand.black
-                                    )
+                                    .background(viewModel.selectedType.isEmpty ? Color.Brand.blue : Color.Brand.white)
+                                    .foregroundColor(viewModel.selectedType.isEmpty ? Color.Brand.white : Color.Brand.black)
                                     .cornerRadius(10)
+                                    .id("allTypes")
+                            }
+
+                            ForEach(viewModel.availableTypes, id: \.self) { type in
+                                Button(action: {
+                                    viewModel.selectedType = type
+                                }) {
+                                    Text(type.capitalized)
+                                        .font(.brand(.bold, size: 16))
+                                        .padding()
+                                        .background(
+                                            viewModel.selectedType == type
+                                            ? Color.Brand.blue
+                                            : Color.Brand.white
+                                        )
+                                        .foregroundColor(
+                                            viewModel.selectedType == type
+                                            ? Color.Brand.white
+                                            : Color.Brand.black
+                                        )
+                                        .cornerRadius(10)
+                                }
+                                .id(type)
                             }
                         }
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
+                    .onChange(of: viewModel.selectedType) { selectedType in
+                        if selectedType.isEmpty {
+                            scrollProxy.scrollTo("allTypes", anchor: .center)
+                        } else {
+                            scrollProxy.scrollTo(selectedType, anchor: .center)
+                        }
+                    }
                 }
 
                 if viewModel.isLoading {

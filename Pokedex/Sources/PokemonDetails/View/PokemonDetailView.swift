@@ -22,6 +22,22 @@ struct PokemonDetailView<ViewModel: PokemonDetailViewModelProtocol>: View {
 
             ScrollView {
                 VStack(spacing: 20) {
+
+                    HStack {
+                        Button {
+                            viewModel.popView()
+                        } label: {
+                            Image(systemName: "chevron.backward")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: 20)
+                                .foregroundStyle(Color.Brand.white)
+                        }
+                        .padding(.horizontal)
+
+                        Spacer()
+                    }
+
                     VStack(spacing: 10) {
                         Text(viewModel.pokemon.name.capitalized)
                             .font(.brand(.bold, size: 24))
@@ -71,7 +87,7 @@ struct PokemonDetailView<ViewModel: PokemonDetailViewModelProtocol>: View {
                                         Text(type.capitalized)
                                             .font(.brand(.bold, size: 14))
                                             .padding(10)
-                                            .background(randomTypeColor())
+                                            .background(randomBrandColor())
                                             .foregroundStyle(Color.Brand.white)
                                             .cornerRadius(8)
                                             .shadow(radius: 3)
@@ -112,11 +128,15 @@ struct PokemonDetailView<ViewModel: PokemonDetailViewModelProtocol>: View {
         .navigationBarHidden(true)
     }
 
-    private func randomTypeColor() -> Color {
-        Color(
-            red: Double.random(in: 0.5...1),
-            green: Double.random(in: 0.5...1),
-            blue: Double.random(in: 0.5...1)
-        )
+    private func randomBrandColor() -> Color {
+        let colors: [Color] = [
+            Color.Brand.blue,
+            Color.Brand.darkBlue,
+            Color.Brand.navyBlue,
+            Color.Brand.yellow,
+            Color.Brand.darkYellow
+        ]
+
+        return colors.randomElement() ?? Color.gray
     }
 }

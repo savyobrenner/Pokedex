@@ -8,6 +8,8 @@
 import SwiftUI
 
 class HomeCoordinator {
+    private var viewModel: HomeViewModel?
+
     private let appCoordinator: AppCoordinator
 
     init(appCoordinator: AppCoordinator) {
@@ -16,12 +18,20 @@ class HomeCoordinator {
 
     func start() -> AnyView {
         let services = HomeServices()
-        let viewModel = HomeViewModel(coordinator: self, services: services)
+        viewModel = HomeViewModel(coordinator: self, services: services)
+
+        guard let viewModel else { return AnyView(EmptyView()) }
+
         return AnyView(HomeView(viewModel: viewModel))
     }
 
     func navigateToDetails(for pokemon: Pokemon) {
-        let detailCoordinator = PokemonDetailCoordinator(pokemon: pokemon, appCoordinator: appCoordinator)
+        guard let viewModel else { return }
+        
+        let detailCoordinator = PokemonDetailCoordinator(
+            pokemon: pokemon, appCoordinator: appCoordinator, homeViewModel: viewModel
+        )
+
         appCoordinator.present(detailCoordinator.start())
     }
 }

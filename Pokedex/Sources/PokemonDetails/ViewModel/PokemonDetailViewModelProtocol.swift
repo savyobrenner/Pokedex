@@ -12,4 +12,5 @@ protocol PokemonDetailViewModelProtocol: ObservableObject {
     var formattedStats: [String] { get }
     var types: [String] { get }
     func onTypeSelected(_ type: String)
+    func popView()
 }

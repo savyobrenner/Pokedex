@@ -31,4 +31,10 @@ class AppCoordinator: ObservableObject {
     func present<Content: View>(_ view: Content) {
         navigationPath.append(AnyViewWrapper(view: view))
     }
+
+    func popView() {
+        if !navigationPath.isEmpty {
+            navigationPath.removeLast()
+        }
+    }
 }

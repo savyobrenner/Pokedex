@@ -23,6 +23,7 @@ class PokemonDetailViewModel: PokemonDetailViewModelProtocol {
             if let name = stat.stat?.name, let value = stat.baseStat {
                 return "\(name.capitalized): \(value)"
             }
+            
             return nil
         } ?? []
     }
@@ -31,7 +32,11 @@ class PokemonDetailViewModel: PokemonDetailViewModelProtocol {
         return pokemon.types?.compactMap { $0.type?.name } ?? []
     }
 
+    func popView() {
+        coordinator.popView()
+    }
+
     func onTypeSelected(_ type: String) {
-//        coordinator.navigateToPokemonType(type)
+        coordinator.navigateToPokemonType(type)
     }
 }
