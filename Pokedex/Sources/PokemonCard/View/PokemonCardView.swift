@@ -35,50 +35,28 @@ struct PokemonCardView<ViewModel: PokemonCardViewModelProtocol>: View {
 
                     VStack(alignment: .leading, spacing: 4) {
                         Text("#\(details.id) \(details.name.capitalized)")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.white)
+                            .font(.brand(.medium, size: 16))
+                            .foregroundStyle(Color.Brand.white)
 
-                        // Tipos do Pokémon
                         if let types = details.types {
                             HStack {
                                 ForEach(types, id: \.slot) { typeElement in
                                     if let typeName = typeElement.type?.name {
                                         Text(typeName.capitalized)
-                                            .font(.caption)
-                                            .padding(6)
-                                            .background(Color.white.opacity(0.2))
+                                            .font(.brand(.regular, size: 12))
+                                            .padding(10)
+                                            .background(Color.Brand.white.opacity(0.2))
                                             .clipShape(Capsule())
-                                            .foregroundColor(.white)
+                                            .foregroundStyle(Color.Brand.white)
                                     }
                                 }
                             }
                         }
 
-                        // Altura e Peso do Pokémon
                         if let height = details.height, let weight = details.weight {
-                            Text("Height: \(height) • Weight: \(weight)")
-                                .font(.footnote)
-                                .foregroundColor(.white.opacity(0.8))
-                        }
-
-                        // Habilidades do Pokémon
-                        if let abilities = details.abilities {
-                            Text("Abilities:")
-                                .font(.footnote)
-                                .foregroundColor(.white.opacity(0.8))
-                                .padding(.top, 2)
-
-                            ForEach(abilities, id: \.ability?.name) { abilityElement in
-                                if let abilityName = abilityElement.ability?.name {
-                                    Text(abilityName.capitalized)
-                                        .font(.caption2)
-                                        .padding(.horizontal, 6)
-                                        .background(Color.white.opacity(0.2))
-                                        .clipShape(Capsule())
-                                        .foregroundColor(.white)
-                                }
-                            }
+                            Text("Height: \(height)\nWeight: \(weight)")
+                                .font(.brand(.regular, size: 14))
+                                .foregroundStyle(Color.Brand.white)
                         }
                     }
                     .padding(.leading)
@@ -95,9 +73,8 @@ struct PokemonCardView<ViewModel: PokemonCardViewModelProtocol>: View {
                             .frame(width: 80, height: 80)
 
                         Text("Loading...")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
+                            .font(.brand(.black, size: 20))
+                            .foregroundStyle(Color.Brand.white)
                             .padding(.leading)
                     }
 
