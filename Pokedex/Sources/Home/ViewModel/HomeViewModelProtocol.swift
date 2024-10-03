@@ -11,10 +11,10 @@ protocol HomeViewModelProtocol: ViewModelProtocol {
     var pokemons: [PokemonListResponse.PokemonData] { get }
     var pokemonDetails: [String: Pokemon] { get }
     var searchText: String { get set }
+    var isLoading: Bool { get set }
     var isSearching: Bool { get set }
 
     func onLoad()
     func loadMorePokemons()
     func searchPokemon(by nameOrId: String) async
-    func loadPokemonDetails(for url: URL) async
 }

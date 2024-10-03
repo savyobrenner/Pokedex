@@ -22,12 +22,16 @@ class HomeViewModel: HomeViewModelProtocol {
     }
 
     @Published
+    var isLoading = false
+
+    @Published
     var isSearching = false
 
     private var nextURL: URL?
-    private var isLoading = false
     private var loadedURLs: Set<URL> = []
     private var allPokemons: [PokemonListResponse.PokemonData] = []
+
+    private var searchTask: Task<Void, Never>?
 
     let coordinator: HomeCoordinator
     private let services: HomeServicesProtocol
@@ -45,21 +49,22 @@ class HomeViewModel: HomeViewModelProtocol {
 
     private func loadInitialPokemons() async {
         guard !isLoading else { return }
+        Task { @MainActor in
+            isLoading = true
+            defer { isLoading = false }
 
-        isLoading = true
-        defer { isLoading = false }
+            do {
+                let response = try await services.loadPokemons(limit: 20, offset: 0)
 
-        do {
-            let response = try await services.loadPokemons(limit: 20, offset: 0)
-
-            DispatchQueue.main.async { [weak self] in
-                self?.nextURL = response.next
-                self?.pokemons.append(contentsOf: response.results)
-                self?.allPokemons.append(contentsOf: response.results)
+                DispatchQueue.main.async { [weak self] in
+                    self?.nextURL = response.next
+                    self?.pokemons.append(contentsOf: response.results)
+                    self?.allPokemons.append(contentsOf: response.results)
+                }
+            } catch {
+                // TODO: - Implement error handling
+                print("Error loading initial pokemons: \(error)")
             }
-        } catch {
-            // TODO: - Implement error handling
-            print("Error loading initial pokemons: \(error)")
         }
     }
 
@@ -68,7 +73,7 @@ class HomeViewModel: HomeViewModelProtocol {
 
         isLoading = true
 
-        Task {
+        Task { @MainActor in
             defer { isLoading = false }
 
             do {
@@ -86,67 +91,47 @@ class HomeViewModel: HomeViewModelProtocol {
         }
     }
 
-    func loadPokemonDetails(for url: URL) async {
-        guard !loadedURLs.contains(url) else { return }
-
-        loadedURLs.insert(url)
-
-        Task { @MainActor in
-            do {
-                let pokemon = try await services.loadPokemonDetails(from: url)
-
-                self.pokemonDetails[pokemon.name] = pokemon
-
-            } catch {
-                // TODO: - Implement error handling
-                print("Error loading pokemon details: \(error)")
-            }
-        }
-    }
-
     func searchPokemon(by nameOrId: String) async {
         let lowercasedQuery = nameOrId.lowercased()
 
-
-        guard let searchURL = URL(
-            string: AppConstants.searchByNameOrIdURL.replacingOccurrences(of: "%@", with: lowercasedQuery)
-        ) else {
-            return
-        }
-
         Task { @MainActor in
+
+            searchTask?.cancel()
+
+            guard let searchURL = URL(
+                string: AppConstants.searchByNameOrIdURL.replacingOccurrences(of: "%@", with: lowercasedQuery)
+            ) else {
+                return
+            }
+            
+            isLoading = true
             isSearching = true
             self.pokemons = []
 
             defer {
-                isSearching = false
+                isLoading = false
             }
 
             // If it's an ID we make the request directly
             if let pokemonId = Int(lowercasedQuery) {
                 do {
                     let pokemon = try await services.searchPokemon(nameOrId: String(pokemonId))
-
                     self.pokemons = [PokemonListResponse.PokemonData(name: pokemon.name, url: searchURL)]
-
                     self.pokemonDetails[pokemon.name] = pokemon
                 } catch {
-                    // TODO: - Implement error handling
                     print("Error loading pokemon details: \(error)")
                 }
             } else {
                 let filteredPokemons = allPokemons.filter { pokemon in
-                    pokemon.name.lowercased().contains(lowercasedQuery)
+                    pokemon.name == lowercasedQuery
                 }
 
                 if filteredPokemons.isEmpty {
                     do {
                         let pokemon = try await services.searchPokemon(nameOrId: lowercasedQuery)
-
                         self.pokemons = [PokemonListResponse.PokemonData(name: pokemon.name, url: searchURL)]
                         self.pokemonDetails[pokemon.name] = pokemon
                     } catch {
-                        // TODO: - Implement error handling
                         print("Error loading pokemon details: \(error)")
                     }
                 } else {
@@ -157,22 +142,25 @@ class HomeViewModel: HomeViewModelProtocol {
     }
 
     private func handleSearchTextChange() {
-        guard !searchText.isEmpty else { return }
+        searchTask?.cancel()
 
-        Task {
-            try? await Task.sleep(nanoseconds: 100000000)
+        guard !searchText.isEmpty else {
+            resetFilter()
+            return
+        }
 
-            if searchText.isEmpty {
-                resetFilter()
-            } else {
-                await searchPokemon(by: searchText)
-            }
+        searchTask = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: 100_000_000)
+
+            guard let self, !Task.isCancelled else { return }
+            await self.searchPokemon(by: self.searchText)
         }
     }
 
     private func resetFilter() {
         DispatchQueue.main.async {
             self.pokemons = self.allPokemons
+            self.isSearching = false
         }
     }
 }
