@@ -12,15 +12,27 @@ class PokemonCardViewModel: PokemonCardViewModelProtocol {
 
     let coordinator: PokemonCardCoordinator
     private let pokemonData: PokemonListResponse.PokemonData
+    private let pokemom: Pokemon?
     private let services: HomeServicesProtocol
 
-    init(coordinator: PokemonCardCoordinator, pokemonData: PokemonListResponse.PokemonData, services: HomeServicesProtocol = HomeServices()) {
+    init(
+        coordinator: PokemonCardCoordinator,
+        pokemonData: PokemonListResponse.PokemonData,
+        pokemon: Pokemon? = nil,
+        services: HomeServicesProtocol = HomeServices()
+    ) {
         self.coordinator = coordinator
         self.pokemonData = pokemonData
+        self.pokemom = pokemon
         self.services = services
     }
 
     func loadPokemonDetails() {
+        if let pokemom {
+            pokemonDetails = pokemom
+            return
+        }
+        
         Task {
             do {
                 let details = try await services.loadPokemonDetails(from: pokemonData.url)

@@ -7,79 +7,65 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "36AF344A-1C73-411F-9C44-1F301702DD28"
-            shouldBeEnabled = "No"
+            uuid = "367E58AB-64FC-4972-AF5E-EA7F93B84EC9"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Pokedex/Shared/Network/Client/NetworkClient.swift"
+            filePath = "Pokedex/Sources/Home/ViewModel/HomeViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
-            landmarkName = "send(request:responseModel:)"
+            startingLineNumber = "114"
+            endingLineNumber = "114"
+            landmarkName = "searchPokemon(by:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "C49097CD-A954-49E2-BA06-713C108C6241"
-            shouldBeEnabled = "No"
+            uuid = "9AB13D79-47E9-4F75-B93B-DBA833A2B842"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Pokedex/Shared/Network/Client/NetworkClient.swift"
+            filePath = "Pokedex/Sources/Home/ViewModel/HomeViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "39"
-            endingLineNumber = "39"
-            landmarkName = "send(request:responseModel:)"
+            startingLineNumber = "153"
+            endingLineNumber = "153"
+            landmarkName = "searchPokemon(by:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "69FB1B29-50A6-4387-B3B8-ABFC075A5AF5"
-            shouldBeEnabled = "No"
+            uuid = "56487BD7-6CB4-49B8-BF06-091E37DC1904"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Pokedex/Shared/Network/Client/NetworkClient.swift"
+            filePath = "Pokedex/Sources/Home/ViewModel/HomeViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
-            landmarkName = "send(request:responseModel:)"
+            startingLineNumber = "146"
+            endingLineNumber = "146"
+            landmarkName = "searchPokemon(by:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "69FB1B29-50A6-4387-B3B8-ABFC075A5AF5 - bf3f02e4a1335dd"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for Pokedex.NetworkClient.send&lt;&#x3c4;_0_0 where &#x3c4;_0_0: Swift.Decodable&gt;(request: Foundation.URLRequest, responseModel: &#x3c4;_0_0.Type) async throws -&gt; &#x3c4;_0_0"
-                  moduleName = "Pokedex.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/savyobrenner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Mobile-development/iOS_apps/WorkChallenges/nScreen/Pokedex/Pokedex/Shared/Network/Client/NetworkClient.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "44"
-                  endingLineNumber = "44">
-               </Location>
-               <Location
-                  uuid = "69FB1B29-50A6-4387-B3B8-ABFC075A5AF5 - 28f4f8ef388f97de"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(4) suspend resume partial function for Pokedex.NetworkClient.send&lt;&#x3c4;_0_0 where &#x3c4;_0_0: Swift.Decodable&gt;(request: Foundation.URLRequest, responseModel: &#x3c4;_0_0.Type) async throws -&gt; &#x3c4;_0_0"
-                  moduleName = "Pokedex.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/savyobrenner/Library/Mobile%20Documents/com~apple~CloudDocs/Documents/Mobile-development/iOS_apps/WorkChallenges/nScreen/Pokedex/Pokedex/Shared/Network/Client/NetworkClient.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "44"
-                  endingLineNumber = "44">
-               </Location>
-            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A25AF4FB-42E1-41F9-87A6-AA662DF0768C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pokedex/Sources/Home/ViewModel/HomeViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
+            landmarkName = "searchPokemon(by:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

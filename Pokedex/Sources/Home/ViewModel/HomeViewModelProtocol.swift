@@ -11,6 +11,7 @@ protocol HomeViewModelProtocol: ViewModelProtocol {
     var pokemons: [PokemonListResponse.PokemonData] { get }
     var pokemonDetails: [String: Pokemon] { get }
     var searchText: String { get set }
+    var isSearching: Bool { get set }
 
     func onLoad()
     func loadMorePokemons()

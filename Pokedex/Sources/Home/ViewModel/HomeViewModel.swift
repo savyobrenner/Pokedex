@@ -21,7 +21,10 @@ class HomeViewModel: HomeViewModelProtocol {
         }
     }
 
-    private var nextURL: URL? = nil
+    @Published
+    var isSearching = false
+
+    private var nextURL: URL?
     private var isLoading = false
     private var loadedURLs: Set<URL> = []
     private var allPokemons: [PokemonListResponse.PokemonData] = []
@@ -64,7 +67,7 @@ class HomeViewModel: HomeViewModelProtocol {
         guard !isLoading, let url = nextURL else { return }
 
         isLoading = true
-        
+
         Task {
             defer { isLoading = false }
 
@@ -88,25 +91,76 @@ class HomeViewModel: HomeViewModelProtocol {
 
         loadedURLs.insert(url)
 
-        do {
-            let pokemon = try await services.loadPokemonDetails(from: url)
+        Task { @MainActor in
+            do {
+                let pokemon = try await services.loadPokemonDetails(from: url)
 
-            DispatchQueue.main.async { [weak self] in
-                self?.pokemonDetails[pokemon.name] = pokemon
+                self.pokemonDetails[pokemon.name] = pokemon
+
+            } catch {
+                // TODO: - Implement error handling
+                print("Error loading pokemon details: \(error)")
             }
-        } catch {
-            // TODO: - Implement error handling
-            print("Error loading pokemon details: \(error)")
         }
     }
 
     func searchPokemon(by nameOrId: String) async {
+        let lowercasedQuery = nameOrId.lowercased()
 
+
+        guard let searchURL = URL(
+            string: AppConstants.searchByNameOrIdURL.replacingOccurrences(of: "%@", with: lowercasedQuery)
+        ) else {
+            return
+        }
+
+        Task { @MainActor in
+            isSearching = true
+            self.pokemons = []
+
+            defer {
+                isSearching = false
+            }
+
+            // If it's an ID we make the request directly
+            if let pokemonId = Int(lowercasedQuery) {
+                do {
+                    let pokemon = try await services.searchPokemon(nameOrId: String(pokemonId))
+
+                    self.pokemons = [PokemonListResponse.PokemonData(name: pokemon.name, url: searchURL)]
+
+                    self.pokemonDetails[pokemon.name] = pokemon
+                } catch {
+                    // TODO: - Implement error handling
+                    print("Error loading pokemon details: \(error)")
+                }
+            } else {
+                let filteredPokemons = allPokemons.filter { pokemon in
+                    pokemon.name.lowercased().contains(lowercasedQuery)
+                }
+
+                if filteredPokemons.isEmpty {
+                    do {
+                        let pokemon = try await services.searchPokemon(nameOrId: lowercasedQuery)
+
+                        self.pokemons = [PokemonListResponse.PokemonData(name: pokemon.name, url: searchURL)]
+                        self.pokemonDetails[pokemon.name] = pokemon
+                    } catch {
+                        // TODO: - Implement error handling
+                        print("Error loading pokemon details: \(error)")
+                    }
+                } else {
+                    self.pokemons = filteredPokemons
+                }
+            }
+        }
     }
 
     private func handleSearchTextChange() {
+        guard !searchText.isEmpty else { return }
+
         Task {
-            try? await Task.sleep(nanoseconds: 500)
+            try? await Task.sleep(nanoseconds: 100000000)
 
             if searchText.isEmpty {
                 resetFilter()
