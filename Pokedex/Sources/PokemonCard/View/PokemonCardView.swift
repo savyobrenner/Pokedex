@@ -87,6 +87,9 @@ struct PokemonCardView<ViewModel: PokemonCardViewModelProtocol>: View {
         .onAppear {
             viewModel.loadPokemonDetails()
         }
+        .onTapGesture {
+            viewModel.onTapGesture()
+        }
     }
 }
 
@@ -96,6 +99,9 @@ struct PokemonCardView<ViewModel: PokemonCardViewModelProtocol>: View {
         name: "nScren",
         url: .init(string: "https://pokeapi.co/api/v2/ability/65/")!
     )
-
-    return PokemonCardCoordinator(pokemonData: pokemonData).start()
+    
+    return PokemonCardCoordinator(pokemonData: pokemonData) { _ in
+        
+    }
+    .start()
 }

@@ -34,5 +34,5 @@ struct SplashView<ViewModel: SplashViewModelProtocol>: View {
 }
 
 #Preview {
-    SplashView(viewModel: SplashViewModel(coordinator: .init()))
+    SplashView(viewModel: SplashViewModel(coordinator: .init(appCoordinator: .init())))
 }

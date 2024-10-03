@@ -7,9 +7,9 @@
 
 import Foundation
 
-protocol HomeViewModelProtocol: ViewModelProtocol {
+protocol HomeViewModelProtocol: ObservableObject {
     var pokemons: [PokemonListResponse.PokemonData] { get }
-    var pokemonDetails: [String: Pokemon] { get }
+    var pokemonDetails: [String: Pokemon] { get set }
     var searchText: String { get set }
     var isLoading: Bool { get set }
     var isSearching: Bool { get set }
@@ -19,4 +19,5 @@ protocol HomeViewModelProtocol: ViewModelProtocol {
     func onLoad()
     func loadMorePokemons()
     func searchPokemon(by nameOrId: String) async
+    func navigateToDetails(for pokemon: Pokemon)
 }

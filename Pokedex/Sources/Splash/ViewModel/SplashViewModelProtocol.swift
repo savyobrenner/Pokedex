@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol SplashViewModelProtocol: ViewModelProtocol {
+protocol SplashViewModelProtocol: ObservableObject {
     var ballOffset: CGSize { get set }
     var textOpacity: Double { get set }
     func onLoad()

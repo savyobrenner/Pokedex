@@ -5,21 +5,22 @@
 //  Created by Savyo Brenner on 01/10/24.
 //
 
-class SplashCoordinator: BaseCoordinator<SplashView<SplashViewModel>> {
-    override func start() -> SplashView<SplashViewModel> {
+import SwiftUI
+
+class SplashCoordinator: ObservableObject {
+    private let appCoordinator: AppCoordinator
+
+    init(appCoordinator: AppCoordinator) {
+        self.appCoordinator = appCoordinator
+    }
+
+    func start() -> AnyView {
         let viewModel = SplashViewModel(coordinator: self)
-        return SplashView(viewModel: viewModel)
+        return AnyView(SplashView(viewModel: viewModel))
     }
 
-    enum Navigation {
-        case home
-    }
-
-    func navigate(to navigation: Navigation) {
-        switch navigation {
-        case .home:
-            let homeCoordinator = HomeCoordinator()
-            present(homeCoordinator.start())
-        }
+    func finishSplash() {
+        let homeCoordinator = HomeCoordinator(appCoordinator: appCoordinator)
+        appCoordinator.present(homeCoordinator.start())
     }
 }

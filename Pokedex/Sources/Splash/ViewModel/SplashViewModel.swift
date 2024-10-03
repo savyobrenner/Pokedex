@@ -44,6 +44,6 @@ class SplashViewModel: SplashViewModelProtocol {
     }
 
     private func navigateToHome() {
-        coordinator.navigate(to: .home)
+        coordinator.finishSplash()
     }
 }

@@ -60,6 +60,7 @@ class HomeViewModel: HomeViewModelProtocol {
 
     private func loadInitialPokemons() async {
         guard !isLoading else { return }
+
         Task { @MainActor in
             isLoading = true
             defer { isLoading = false }
@@ -166,21 +167,6 @@ class HomeViewModel: HomeViewModelProtocol {
         }
     }
 
-    private func handleTypeSelectionChange() {
-        if !selectedType.isEmpty {
-            searchText = ""
-        }
-
-        guard !selectedType.isEmpty else {
-            resetFilter()
-            return
-        }
-
-        Task { @MainActor in
-            await searchPokemonByType(selectedType)
-        }
-    }
-
     func searchPokemonByType(_ type: String) async {
         Task { @MainActor in
             isLoading = true
@@ -197,6 +183,25 @@ class HomeViewModel: HomeViewModelProtocol {
             } catch {
                 print("Error loading pokemons by type: \(error)")
             }
+        }
+    }
+
+    func navigateToDetails(for pokemon: Pokemon) {
+        coordinator.navigateToDetails(for: pokemon)
+    }
+
+    private func handleTypeSelectionChange() {
+        if !selectedType.isEmpty {
+            searchText = ""
+        }
+
+        guard !selectedType.isEmpty else {
+            resetFilter()
+            return
+        }
+
+        Task { @MainActor in
+            await searchPokemonByType(selectedType)
         }
     }
 

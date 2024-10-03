@@ -9,16 +9,11 @@ import SwiftUI
 
 @main
 struct PokedexApp: App {
-    @StateObject private var splashCoordinator = SplashCoordinator()
+    @StateObject private var appCoordinator = AppCoordinator()
 
     var body: some Scene {
         WindowGroup {
-            NavigationStack(path: $splashCoordinator.navigationPath) {
-                splashCoordinator.start()
-                    .navigationDestination(for: AnyViewWrapper.self) { wrapper in
-                        wrapper.view
-                    }
-            }
+            appCoordinator.start()
         }
     }
 }

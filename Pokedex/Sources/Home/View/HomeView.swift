@@ -76,14 +76,16 @@ struct HomeView<ViewModel: HomeViewModelProtocol>: View {
                         .multilineTextAlignment(.center)
                         .padding(.top, 50)
                 }
-
+                
                 ScrollView {
                     LazyVStack(spacing: 16) {
                         ForEach(viewModel.pokemons, id: \.url) { pokemonData in
                             let coordinator = PokemonCardCoordinator(
                                 pokemonData: pokemonData, pokemon: viewModel.pokemonDetails[pokemonData.name]
-                            )
-
+                            ) { pokemon in
+                                viewModel.navigateToDetails(for: pokemon)
+                            }
+                            
                             coordinator.start()
                                 .padding()
                                 .shadow(color: Color.Brand.black.opacity(0.2), radius: 10, x: 0, y: 5)
@@ -107,5 +109,5 @@ struct HomeView<ViewModel: HomeViewModelProtocol>: View {
 }
 
 #Preview {
-    HomeView(viewModel: HomeViewModel(coordinator: .init(), services: HomeServices()))
+    HomeView(viewModel: HomeViewModel(coordinator: .init(appCoordinator: .init()), services: HomeServices()))
 }

@@ -8,23 +8,27 @@
 import SwiftUI
 
 class PokemonCardViewModel: PokemonCardViewModelProtocol {
-    @Published var pokemonDetails: Pokemon?
+    @Published
+    var pokemonDetails: Pokemon?
 
     let coordinator: PokemonCardCoordinator
     private let pokemonData: PokemonListResponse.PokemonData
     private let pokemom: Pokemon?
     private let services: HomeServicesProtocol
+    private let action: (Pokemon) -> Void
 
     init(
         coordinator: PokemonCardCoordinator,
         pokemonData: PokemonListResponse.PokemonData,
         pokemon: Pokemon? = nil,
-        services: HomeServicesProtocol = HomeServices()
+        services: HomeServicesProtocol = HomeServices(),
+        action: @escaping (Pokemon) -> Void
     ) {
         self.coordinator = coordinator
         self.pokemonData = pokemonData
         self.pokemom = pokemon
         self.services = services
+        self.action = action
     }
     
     func loadPokemonDetails() {
@@ -41,5 +45,11 @@ class PokemonCardViewModel: PokemonCardViewModelProtocol {
                 print("Error loading pokemon details (Pokemon Card): \(error)")
             }
         }
+    }
+
+    func onTapGesture() {
+        guard let pokemonDetails else { return }
+
+        action(pokemonDetails)
     }
 }
