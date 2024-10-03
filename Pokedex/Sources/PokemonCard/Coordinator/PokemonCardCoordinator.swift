@@ -19,7 +19,7 @@ class PokemonCardCoordinator {
     }
 
     func start() -> PokemonCardView<PokemonCardViewModel> {
-        let services = HomeServices()
+        let services = PokemonServices()
 
         let viewModel = PokemonCardViewModel(
             coordinator: self,

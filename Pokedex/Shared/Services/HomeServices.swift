@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class HomeServices: HomeServicesProtocol {
+final class PokemonServices: PokemonServicesProtocol {
     private let network: NetworkProtocol
 
     init(network: NetworkProtocol = NetworkClient()) {

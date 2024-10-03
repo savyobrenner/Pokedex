@@ -17,7 +17,7 @@ class HomeCoordinator {
     }
 
     func start() -> AnyView {
-        let services = HomeServices()
+        let services = PokemonServices()
         viewModel = HomeViewModel(coordinator: self, services: services)
 
         guard let viewModel else { return AnyView(EmptyView()) }

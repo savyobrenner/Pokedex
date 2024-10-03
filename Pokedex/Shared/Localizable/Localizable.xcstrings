@@ -1,0 +1,50 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    "#%lld" : {
+
+    },
+    "#%lld %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "#%1$lld %2$@"
+          }
+        }
+      }
+    },
+    "All Types" : {
+
+    },
+    "Height: %lld\nWeight: %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Height: %1$lld\nWeight: %2$lld"
+          }
+        }
+      }
+    },
+    "Loading..." : {
+
+    },
+    "No Pokémon found, please try another search." : {
+
+    },
+    "Pokedex" : {
+
+    },
+    "Stats" : {
+
+    },
+    "Types" : {
+
+    }
+  },
+  "version" : "1.0"
+}

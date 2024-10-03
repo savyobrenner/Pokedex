@@ -1,5 +1,5 @@
 //
-//  HomeServicesProtocol.swift
+//  PokemonServicesProtocol.swift
 //  Pokedex
 //
 //  Created by Savyo Brenner on 02/10/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol HomeServicesProtocol {
+protocol PokemonServicesProtocol {
     func loadPokemons(limit: Int, offset: Int) async throws -> PokemonListResponse
     func loadPokemons(from url: URL) async throws -> PokemonListResponse
     func searchPokemon(nameOrId: String) async throws -> Pokemon

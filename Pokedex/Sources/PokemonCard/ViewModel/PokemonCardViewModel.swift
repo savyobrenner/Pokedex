@@ -14,14 +14,14 @@ class PokemonCardViewModel: PokemonCardViewModelProtocol {
     let coordinator: PokemonCardCoordinator
     private let pokemonData: PokemonListResponse.PokemonData
     private let pokemom: Pokemon?
-    private let services: HomeServicesProtocol
+    private let services: PokemonServicesProtocol
     private let action: (Pokemon) -> Void
 
     init(
         coordinator: PokemonCardCoordinator,
         pokemonData: PokemonListResponse.PokemonData,
         pokemon: Pokemon? = nil,
-        services: HomeServicesProtocol = HomeServices(),
+        services: PokemonServicesProtocol = PokemonServices(),
         action: @escaping (Pokemon) -> Void
     ) {
         self.coordinator = coordinator

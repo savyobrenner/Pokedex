@@ -44,9 +44,9 @@ class HomeViewModel: HomeViewModelProtocol {
     private var searchTask: Task<Void, Never>?
 
     let coordinator: HomeCoordinator
-    private let services: HomeServicesProtocol
+    private let services: PokemonServicesProtocol
 
-    init(coordinator: HomeCoordinator, services: HomeServicesProtocol) {
+    init(coordinator: HomeCoordinator, services: PokemonServicesProtocol) {
         self.coordinator = coordinator
         self.services = services
     }

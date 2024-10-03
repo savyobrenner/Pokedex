@@ -124,5 +124,5 @@ struct HomeView<ViewModel: HomeViewModelProtocol>: View {
 }
 
 #Preview {
-    HomeView(viewModel: HomeViewModel(coordinator: .init(appCoordinator: .init()), services: HomeServices()))
+    HomeView(viewModel: HomeViewModel(coordinator: .init(appCoordinator: .init()), services: PokemonServices()))
 }
