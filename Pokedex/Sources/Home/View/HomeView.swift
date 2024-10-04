@@ -119,6 +119,9 @@ struct HomeView<ViewModel: HomeViewModelProtocol>: View {
         .onAppear {
             viewModel.onLoad()
         }
+        .alert(isPresented: $viewModel.showingAlert) {
+            Alert(title: Text("Error"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("OK")))
+        }
         .navigationBarBackButtonHidden(true)
     }
 }

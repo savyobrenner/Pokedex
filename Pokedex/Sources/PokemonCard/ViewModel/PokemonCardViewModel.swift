@@ -32,6 +32,10 @@ class PokemonCardViewModel: PokemonCardViewModelProtocol {
     }
     
     func loadPokemonDetails() {
+        guard pokemonDetails == nil else {
+            return
+        }
+
         Task { @MainActor in
             if let pokemom {
                 pokemonDetails = pokemom

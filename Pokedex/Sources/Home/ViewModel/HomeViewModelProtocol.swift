@@ -15,6 +15,8 @@ protocol HomeViewModelProtocol: ObservableObject {
     var isSearching: Bool { get set }
     var selectedType: String { get set }
     var availableTypes: [String] { get set }
+    var showingAlert: Bool { get set }
+    var alertMessage: String { get set }
 
     func onLoad()
     func loadMorePokemons()

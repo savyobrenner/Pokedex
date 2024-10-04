@@ -37,6 +37,12 @@ class HomeViewModel: HomeViewModelProtocol {
     @Published
     var availableTypes: [String] = []
 
+    @Published
+    var showingAlert = false
+
+    @Published
+    var alertMessage = ""
+
     private var nextURL: URL?
     private var loadedURLs: Set<URL> = []
     private var allPokemons: [PokemonListResponse.PokemonData] = []
@@ -74,8 +80,7 @@ class HomeViewModel: HomeViewModelProtocol {
                     self?.allPokemons.append(contentsOf: response.results)
                 }
             } catch {
-                // TODO: - Implement error handling
-                print("Error loading initial pokemons: \(error)")
+                showAlert(with: "Failed to load Pokémon. Please try again later.")
             }
         }
     }
@@ -88,11 +93,13 @@ class HomeViewModel: HomeViewModelProtocol {
         Task { @MainActor in
             defer { isLoading = false }
 
-            if let response = try? await services.loadPokemons(from: url) {
+            do {
+                let response = try await services.loadPokemons(from: url)
                 nextURL = response.next
                 pokemons.append(contentsOf: response.results)
                 allPokemons.append(contentsOf: response.results)
-
+            } catch {
+                showAlert(with: "Failed to load more Pokémon. Please try again later.")
             }
         }
     }
@@ -128,7 +135,8 @@ class HomeViewModel: HomeViewModelProtocol {
                     pokemons = [PokemonListResponse.PokemonData(name: pokemon.name, url: searchURL)]
                     pokemonDetails[pokemon.name] = pokemon
                 } catch {
-                    print("Error loading pokemon details: \(error)")
+                    // This is intentional, we have a treatment to check if the 'pokemons' object is nil
+                    debugPrint("Error searching pokemons: \(error)")
                 }
             } else {
                 let filteredPokemons = allPokemons.filter { pokemon in
@@ -141,7 +149,8 @@ class HomeViewModel: HomeViewModelProtocol {
                         pokemons = [PokemonListResponse.PokemonData(name: pokemon.name, url: searchURL)]
                         pokemonDetails[pokemon.name] = pokemon
                     } catch {
-                        print("Error loading pokemon details: \(error)")
+                        // This is intentional, we have a treatment to check if the 'pokemons' object is nil
+                        debugPrint("Error searching pokemons: \(error)")
                     }
                 } else {
                     self.pokemons = filteredPokemons
@@ -156,7 +165,7 @@ class HomeViewModel: HomeViewModelProtocol {
                 let response = try await services.loadTypes()
                 availableTypes = response.results.map { $0.name }
             } catch {
-                print("Error loading Pokémon types: \(error)")
+                showAlert(with: "Failed to load Pokémon types. Please try again later.")
             }
         }
     }
@@ -175,7 +184,8 @@ class HomeViewModel: HomeViewModelProtocol {
                 let pokemonsOfType = try await services.loadPokemonsByType(type)
                 pokemons = pokemonsOfType
             } catch {
-                print("Error loading pokemons by type: \(error)")
+                // This is intentional, we have a treatment to check if the 'pokemons' object is nil
+                debugPrint("Error searching pokemons: \(error)")
             }
         }
     }
@@ -208,7 +218,7 @@ class HomeViewModel: HomeViewModelProtocol {
         }
 
         searchTask = Task { [weak self] in
-            try? await Task.sleep(nanoseconds: 100_000_000)
+            try? await Task.sleep(nanoseconds: 900_000_000)
 
             guard let self, !Task.isCancelled else { return }
             await self.searchPokemon(by: self.searchText)
@@ -220,5 +230,10 @@ class HomeViewModel: HomeViewModelProtocol {
             self.pokemons = self.allPokemons
             self.isSearching = false
         }
+    }
+
+    private func showAlert(with message: String) {
+        alertMessage = message
+        showingAlert = true
     }
 }
