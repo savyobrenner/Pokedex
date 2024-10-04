@@ -22,4 +22,5 @@ protocol HomeViewModelProtocol: ObservableObject {
     func loadMorePokemons()
     func searchPokemon(by nameOrId: String) async
     func navigateToDetails(for pokemon: Pokemon)
+    func loadPokemonDetails(for pokemonData: PokemonListResponse.PokemonData) async
 }

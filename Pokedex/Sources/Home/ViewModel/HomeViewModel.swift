@@ -190,6 +190,21 @@ class HomeViewModel: HomeViewModelProtocol {
         }
     }
 
+    func loadPokemonDetails(for pokemonData: PokemonListResponse.PokemonData) async {
+        if let _ = pokemonDetails[pokemonData.name] {
+            return
+        }
+
+        do {
+            let details = try await services.loadPokemonDetails(from: pokemonData.url)
+            DispatchQueue.main.async { [weak self] in
+                self?.pokemonDetails[pokemonData.name] = details
+            }
+        } catch {
+            showAlert(with: "Failed to load Pokémon details. Please try again later.")
+        }
+    }
+
     func navigateToDetails(for pokemon: Pokemon) {
         coordinator.navigateToDetails(for: pokemon)
     }
