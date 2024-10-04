@@ -88,17 +88,11 @@ class HomeViewModel: HomeViewModelProtocol {
         Task { @MainActor in
             defer { isLoading = false }
 
-            do {
-                let response = try await services.loadPokemons(from: url)
+            if let response = try? await services.loadPokemons(from: url) {
+                nextURL = response.next
+                pokemons.append(contentsOf: response.results)
+                allPokemons.append(contentsOf: response.results)
 
-                DispatchQueue.main.async { [weak self] in
-                    self?.nextURL = response.next
-                    self?.pokemons.append(contentsOf: response.results)
-                    self?.allPokemons.append(contentsOf: response.results)
-                }
-            } catch {
-                // TODO: - Implement error handling
-                print("Error loading more pokemons: \(error)")
             }
         }
     }
@@ -131,8 +125,8 @@ class HomeViewModel: HomeViewModelProtocol {
             if let pokemonId = Int(lowercasedQuery) {
                 do {
                     let pokemon = try await services.searchPokemon(nameOrId: String(pokemonId))
-                    self.pokemons = [PokemonListResponse.PokemonData(name: pokemon.name, url: searchURL)]
-                    self.pokemonDetails[pokemon.name] = pokemon
+                    pokemons = [PokemonListResponse.PokemonData(name: pokemon.name, url: searchURL)]
+                    pokemonDetails[pokemon.name] = pokemon
                 } catch {
                     print("Error loading pokemon details: \(error)")
                 }
@@ -144,8 +138,8 @@ class HomeViewModel: HomeViewModelProtocol {
                 if filteredPokemons.isEmpty {
                     do {
                         let pokemon = try await services.searchPokemon(nameOrId: lowercasedQuery)
-                        self.pokemons = [PokemonListResponse.PokemonData(name: pokemon.name, url: searchURL)]
-                        self.pokemonDetails[pokemon.name] = pokemon
+                        pokemons = [PokemonListResponse.PokemonData(name: pokemon.name, url: searchURL)]
+                        pokemonDetails[pokemon.name] = pokemon
                     } catch {
                         print("Error loading pokemon details: \(error)")
                     }
@@ -171,7 +165,7 @@ class HomeViewModel: HomeViewModelProtocol {
         Task { @MainActor in
             isLoading = true
             isSearching = true
-            self.pokemons = []
+            pokemons = []
 
             defer {
                 isLoading = false
@@ -179,7 +173,7 @@ class HomeViewModel: HomeViewModelProtocol {
 
             do {
                 let pokemonsOfType = try await services.loadPokemonsByType(type)
-                self.pokemons = pokemonsOfType
+                pokemons = pokemonsOfType
             } catch {
                 print("Error loading pokemons by type: \(error)")
             }

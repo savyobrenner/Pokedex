@@ -40,7 +40,7 @@ class PokemonCardViewModel: PokemonCardViewModelProtocol {
             
             do {
                 let details = try await services.loadPokemonDetails(from: pokemonData.url)
-                self.pokemonDetails = details
+                pokemonDetails = details
             } catch {
                 print("Error loading pokemon details (Pokemon Card): \(error)")
             }
