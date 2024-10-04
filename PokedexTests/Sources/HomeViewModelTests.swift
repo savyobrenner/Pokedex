@@ -24,35 +24,35 @@ final class HomeViewModelTests: XCTestCase {
         super.tearDown()
     }
     
-    func test_onLoad_loadsPokemons() async {
+    func testLoadPokemons() async {
         viewModel.onLoad()
         
         XCTAssertEqual(viewModel.pokemons.count, 1)
         XCTAssertEqual(viewModel.pokemons.first?.name, "pikachu")
     }
     
-    func test_loadMorePokemons_appendsPokemons() async {
+    func testLoadMorePokemons() async {
         viewModel.onLoad()
         viewModel.loadMorePokemons()
         
         XCTAssertEqual(viewModel.pokemons.count, 2)
     }
     
-    func test_searchPokemon_findsPokemon() async {
+    func testSearchPokemon() async {
         await viewModel.searchPokemon(by: "25")
         
         XCTAssertEqual(viewModel.pokemons.count, 1)
         XCTAssertEqual(viewModel.pokemons.first?.name, "pikachu")
     }
     
-    func test_searchPokemon_noResults() async {
+    func testSearchNoResult() async {
         mockServices.shouldFail = true
         await viewModel.searchPokemon(by: "unknown")
 
         XCTAssertTrue(viewModel.pokemons.isEmpty)
     }
     
-    func test_handleTypeSelectionChange_resetsSelection() async {
+    func testHandleSelectionChange() async {
         viewModel.selectedType = "electric"
         await viewModel.searchPokemonByType("electric")
         

@@ -24,13 +24,13 @@ final class PokemonServicesTests: XCTestCase {
         super.tearDown()
     }
 
-    func test_loadPokemons_returnsPokemons() async throws {
+    func testLoadPokemons() async throws {
         let response = try await services.loadPokemons(limit: 20, offset: 0)
         XCTAssertEqual(response.results.count, 1)
         XCTAssertEqual(response.results.first?.name, "pikachu")
     }
 
-    func test_searchPokemon_returnsPokemon() async throws {
+    func testSearchPokemon() async throws {
         let pokemon = try await services.searchPokemon(nameOrId: "25")
         XCTAssertEqual(pokemon.name, "pikachu")
     }
