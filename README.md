@@ -1,3 +1,9 @@
+# ⚠️ Important Notice
+
+This project was built using **Xcode 16**. This branch is designed to work perfectly only with Xcode 16 or above. If you are using **Xcode 15 or below**, please switch to the branch `support/xcodes_bellow_16`.
+
+**Note**: Due to a bug in Xcode 16, unit tests only work with simulators running iOS **below version 18**.
+
 # 📱 Pokedex App
 
 An iOS app built to view information about Pokémon. Developed in **SwiftUI**, using the **MVVM-C (Model-View-ViewModel-Coordinator)**.
@@ -35,7 +41,14 @@ The app was developed without external libraries.
 1. Clone the repository to your machine:
 2. Open the project in **Xcode**.
 3. Select the simulator of your choice or a physical device.
-4. Compile and run the project.
+4. Compile and run the project by clicking the Run button or pressing Cmd + R.
+
+## 🧪 Running Tests
+
+1. Clone the repository to your machine:
+2. Open the project in **Xcode**.
+3. Select the simulator of your choice or a physical device (with iOS below 18 - Xcode's bug).
+4. Press Cmd + U to build and run all the tests.
 
 ## 📜 Project Structure
 
