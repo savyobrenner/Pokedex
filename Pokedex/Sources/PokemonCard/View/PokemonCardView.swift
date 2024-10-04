@@ -85,7 +85,7 @@ struct PokemonCardView<ViewModel: PokemonCardViewModelProtocol>: View {
         }
         .frame(height: 150)
         .onAppear {
-            viewModel.loadPokemonDetails()
+//            viewModel.loadPokemonDetails()
         }
         .onTapGesture {
             viewModel.onTapGesture()

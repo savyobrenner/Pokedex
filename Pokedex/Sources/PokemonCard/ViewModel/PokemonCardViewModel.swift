@@ -9,6 +9,7 @@ import SwiftUI
 
 class PokemonCardViewModel: PokemonCardViewModelProtocol {
     @Published var pokemonDetails: Pokemon?
+    @Published var isLoading = false
 
     let coordinator: PokemonCardCoordinator
     private let pokemonData: PokemonListResponse.PokemonData
@@ -30,9 +31,16 @@ class PokemonCardViewModel: PokemonCardViewModelProtocol {
     }
 
     func loadPokemonDetails() {
+        guard pokemonDetails == nil else { return }
+
+        if let cachedDetails = homeViewModel?.pokemonDetails[pokemonData.name] {
+            self.pokemonDetails = cachedDetails
+            return
+        }
+
         Task { @MainActor in
             await homeViewModel?.loadPokemonDetails(for: pokemonData)
-            self.pokemonDetails = homeViewModel?.pokemonDetails[pokemonData.name]
+            pokemonDetails = homeViewModel?.pokemonDetails[pokemonData.name]
         }
     }
 

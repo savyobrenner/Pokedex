@@ -96,7 +96,8 @@ struct HomeView<ViewModel: HomeViewModelProtocol>: View {
                     LazyVStack(spacing: 16) {
                         ForEach(viewModel.pokemons, id: \.url) { pokemonData in
                             let coordinator = PokemonCardCoordinator(
-                                pokemonData: pokemonData, homeViewModel: (viewModel as? HomeViewModel)
+                                pokemonData: pokemonData,
+                                homeViewModel: (viewModel as? HomeViewModel)
                             ) { pokemon in
                                 viewModel.navigateToDetails(for: pokemon)
                             }
